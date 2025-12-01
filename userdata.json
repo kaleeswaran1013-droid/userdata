@@ -1,0 +1,355 @@
+{
+	"info": {
+		"_postman_id": "abb79a1a-7c6b-48fb-8a29-921fcce559d5",
+		"name": "My Collection",
+		"description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50277330",
+		"_collection_link": "https://kaleeswaran1013-1398106.postman.co/workspace/kaleeswaran's-Workspace~e7880bc7-91c9-4769-8ddf-14d7d80fa79e/collection/50277330-abb79a1a-7c6b-48fb-8a29-921fcce559d5?action=share&source=collection_link&creator=50277330"
+	},
+	"item": [
+		{
+			"name": "Get data",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.log(\"pre-request\")\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"successfull response\",function(){\r",
+							"pm.response.to.have.status(200)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"status code is 404\",function(){\r",
+							"    pm.response.to.have.status('OK');\r",
+							"});\r",
+							"pm.test(\"successfull POST request \",function(){\r",
+							"   pm.expect(pm.response.code).to.be.oneOf([2001,200]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"expecting only Success response\",function(){\r",
+							"    pm.expect(pm.response.code).to.be.within([201,299]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"expecting only Success response\",function(){\r",
+							"    pm.expect(pm.response.code).to.be.above(399);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"error pn client\",function(){\r",
+							"    pm.expect(pm.response.code).to.be.below(500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"response is fast \",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"productID is found\",()=>{\r",
+							"    pm.expect(pm.response.json()).to.have.property('productID')\r",
+							"})\r",
+							"\r",
+							"let schema = {\r",
+							"    \"type\" : \"object\",\r",
+							"    \"required\" : ['productID','string'],\r",
+							"    \"properties\":{\r",
+							"    \"properties\":{\"type\":\"string\"},\r",
+							"    \"stock\": { \"type\": \"string\"},\r",
+							"    \"price\": {\"type\":\"string\"},\r",
+							"    \"productID\":{\"type\": \"type\"} \r",
+							"    }\r",
+							"}\r",
+							"pm.test(\"json scane check\",()=>{\r",
+							"    pm.response.to.have.jsonSchema(schema)\r",
+							"})\r",
+							"pm.test('schema is valid',function(){\r",
+							"    pm.expect(tv4.validata(pm.response.json(),schema)).to.be.true;\r",
+							"});\r",
+							"pm.collectionVariables.set(\"name\",pm.response.json().productName)\r",
+							"pm.environment.set(\"price\",pm.response.json().price)\r",
+							"pm.globals.set(\"stock\",pm.response.json().stock)\r",
+							"console.log(pm.collectionVariables.get(\"name\"))\r",
+							"console.log(pm.environment.get(\"price\"))\r",
+							"console.log(pm.globals.get(\"stock\"))\r",
+							"pm.globals.clear()"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS384",
+							"type": "string"
+						},
+						{
+							"key": "payload",
+							"value": "{}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "Bearer",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://fakestoreapi.com/products",
+					"protocol": "https",
+					"host": [
+						"fakestoreapi",
+						"com"
+					],
+					"path": [
+						"products"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "Post data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"id\", pm.response.json().tarinerid);",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"trainername\": \"Cristina howe\",\n    \"tarinerAge\": \"{{$randomInt}}\",\n    \"availability\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https:{{baseurl}}skasc/API/trainers",
+					"host": [
+						"https"
+					],
+					"port": "{{baseurl}}skasc",
+					"path": [
+						"API",
+						"trainers"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https:{{baseurl}}skasc/API/trainers/{{id}}",
+					"host": [
+						"https"
+					],
+					"port": "{{baseurl}}skasc",
+					"path": [
+						"API",
+						"trainers",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"trainername\":\"{{update number}}\",\r\n    \"trainerage\":\"86752\",\r\n    \"availability\":false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https:{{baseurl}}skasc/API/trainers/{{id}}",
+					"host": [
+						"https"
+					],
+					"port": "{{baseurl}}skasc",
+					"path": [
+						"API",
+						"trainers",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"availability\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https:{{baseurl}}skasc/API/trainers/{{id}}",
+					"host": [
+						"https"
+					],
+					"port": "{{baseurl}}skasc",
+					"path": [
+						"API",
+						"trainers",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https:{{baseurl}}skasc/API/trainers/{{id}}",
+					"host": [
+						"https"
+					],
+					"port": "{{baseurl}}skasc",
+					"path": [
+						"API",
+						"trainers",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "60"
+		},
+		{
+			"key": "name",
+			"value": ""
+		},
+		{
+			"key": "baseurl",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
